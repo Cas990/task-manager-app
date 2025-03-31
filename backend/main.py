@@ -18,7 +18,7 @@ tasks = []
 
 # Task model
 class Task(BaseModel):
-    id: int
+    id: Optional[int] = None # Made id optional
     title: str
     description: Optional[str] = None
     completed: bool = False
