@@ -25,31 +25,47 @@ export default {
 
     // Fetch tasks from FastAPI
     const fetchTasks = async () => {
-      const response = await axios.get("http://127.0.0.1:8000/tasks");
-      tasks.value = response.data;
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/tasks");
+        tasks.value = response.data;
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
     };
 
     // Add a new task
     const addTask = async () => {
       if (!newTask.value.trim()) return;
-      const response = await axios.post("http://127.0.0.1:8000/tasks", {
-        title: newTask.value,
-        completed: false,
-      });
-      tasks.value.push(response.data);
-      newTask.value = "";
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/tasks", {
+          title: newTask.value,
+          completed: false,
+        });
+        tasks.value.push(response.data);
+        newTask.value = "";
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
     };
 
     // Toggle task completion
     const toggleTask = async (task) => {
       task.completed = !task.completed;
-      await axios.put(`http://127.0.0.1:8000/tasks/${task.id}`, task);
+      try {
+        await axios.put(`http://127.0.0.1:8000/tasks/${task.id}`, task);
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
     };
 
     // Delete a task
     const deleteTask = async (taskId) => {
-      await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}`);
-      tasks.value = tasks.value.filter(task => task.id !== taskId);
+      try {
+        await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}`);
+        tasks.value = tasks.value.filter((task) => task.id !== taskId);
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
     };
 
     onMounted(fetchTasks);
@@ -63,5 +79,6 @@ export default {
 /* Add your styles here */
 .done {
   text-decoration: line-through;
+  cursor: pointer;
 }
 </style>
