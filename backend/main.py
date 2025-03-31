@@ -17,6 +17,7 @@ class Task(BaseModel):
 @app.post("/tasks/")
 
 def create_task(task: Task):
+    task.id = len(tasks) + 1  # Auto-generate ID based on list length
     tasks.append(task)
     return task
 
