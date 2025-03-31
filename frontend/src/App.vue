@@ -1,8 +1,19 @@
 <template>
-  <TaskManager />
+  <div id="app">
+    <TaskManager />  <!-- Use the TaskManager component -->
+  </div>
 </template>
 
 <script>
-import TaskManager from "./TaskManager.vue";
-export default { components: { TaskManager } };
+import TaskManager from './components/TaskManager.vue';  // Import TaskManager component
+
+export default {
+  components: {
+    TaskManager
+  }
+};
 </script>
+
+<style>
+/* Add any global styling here */
+</style>
