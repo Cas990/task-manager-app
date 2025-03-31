@@ -1,3 +1,20 @@
+<template>
+  <div>
+    <h1>Task Manager</h1>
+    <input v-model="newTask" placeholder="New task" />
+    <button @click="addTask">Add Task</button>
+    <ul>
+      <li v-for="task in tasks" :key="task.id">
+        <span :class="{ done: task.completed }" @click="toggleTask(task)">
+          {{ task.title }}
+        </span>
+        <button @click="deleteTask(task.id)">Delete</button>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
@@ -39,19 +56,12 @@ export default {
 
     return { tasks, newTask, addTask, toggleTask, deleteTask };
   },
-  template: `
-    <div>
-      <h1>Task Manager</h1>
-      <input v-model="newTask" placeholder="New task" />
-      <button @click="addTask">Add Task</button>
-      <ul>
-        <li v-for="task in tasks" :key="task.id">
-          <span :class="{ done: task.completed }" @click="toggleTask(task)">
-            {{ task.title }}
-          </span>
-          <button @click="deleteTask(task.id)">Delete</button>
-        </li>
-      </ul>
-    </div>
-  `,
 };
+</script>
+
+<style scoped>
+/* Add your styles here */
+.done {
+  text-decoration: line-through;
+}
+</style>
