@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, Boolean # type: ignore
+from sqlalchemy.ext.asyncio import AsyncSession # type: ignore
+from sqlalchemy.future import select # type: ignore
+from sqlalchemy.orm import declarative_base # type: ignore
 
 Base = declarative_base()
 
