@@ -8,7 +8,7 @@ from typing import List, Optional
 from models import Task
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 
-DATABASE_URL = "postgresql+asyncpg://user:wWD;\kxe;uYgo7{@localhost:5432/taskdb"
+DATABASE_URL = "postgresql+asyncpg://postgres:wWD;\kxe;uYgo7{@localhost:5432/taskdb"
 
 # Create a database engine
 engine = create_async_engine(DATABASE_URL, echo=True)
