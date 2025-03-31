@@ -26,7 +26,7 @@ export default {
     // Fetch tasks from FastAPI
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/tasks");
+        const response = await axios.get("http://127.0.0.1:8000/tasks/");
         tasks.value = response.data;
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -37,7 +37,7 @@ export default {
     const addTask = async () => {
       if (!newTask.value.trim()) return;
       try {
-        const response = await axios.post("http://127.0.0.1:8000/tasks", {
+        const response = await axios.post("http://127.0.0.1:8000/tasks/", {
           title: newTask.value,
           completed: false,
         });
