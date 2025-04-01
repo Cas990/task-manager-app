@@ -47,7 +47,7 @@ class TaskResponse(BaseModel):
         from_attributed = True # Enable conversion from SQLAlchemy models
 
 # Create a task
-@app.post("/tasks/", response_model = TaskCreate)
+@app.post("/tasks/", response_model = TaskResponse)
 
 async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db)):
     db_task = Task(title=task.title, description=task.description, completed=task.completed)
@@ -68,7 +68,7 @@ async def get_tasks(db: AsyncSession = Depends(get_db)):
 @app.get("/tasks/{task_id}", response_model = TaskResponse)
 async def get_task(task_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar().first()
+    task = result.scalar()
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -83,7 +83,7 @@ async def get_task(task_id: int, db: AsyncSession = Depends(get_db)):
 @app.put("/tasks/{task_id}", response_model = TaskResponse)
 async def update_task(task_id: int, task_update: TaskCreate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar().first()
+    task = result.scalar()
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -107,7 +107,7 @@ async def update_task(task_id: int, task_update: TaskCreate, db: AsyncSession = 
 @app.delete("/tasks/{task_id}")
 async def delete_task(task_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar().first()
+    task = result.scalar()
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")

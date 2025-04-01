@@ -8,7 +8,7 @@
         <span :class="{ done: task.completed }" @click="toggleTask(task)">
           {{ task.title }}
         </span>
-        <button @click="deleteTask(task.id)">Delete</button>
+        <button @click="deleteTask(task)">Delete</button>
       </li>
     </ul>
   </div>
@@ -42,6 +42,7 @@ export default {
           completed: false,
         });
         tasks.value.push(response.data);
+        console.log("Added task:", response.data);
         newTask.value = "";
       } catch (error) {
         console.error("Error adding task:", error);
@@ -50,6 +51,7 @@ export default {
 
     // Toggle task completion
     const toggleTask = async (task) => {
+      console.log("Toggling task with ID:", task.id);	
       task.completed = !task.completed;
       try {
         await axios.put(`http://127.0.0.1:8000/tasks/${task.id}`, task);
@@ -59,10 +61,15 @@ export default {
     };
 
     // Delete a task
-    const deleteTask = async (taskId) => {
+    const deleteTask = async (task) => {
+      console.log("Deleting task with ID:", task.id);
+      if (!task.id) {
+        console.error("Invalid task ID");
+        return;
+      }
       try {
-        await axios.delete(`http://127.0.0.1:8000/tasks/${taskId}`);
-        tasks.value = tasks.value.filter((task) => task.id !== taskId);
+        await axios.delete(`http://127.0.0.1:8000/tasks/${task.id}`);
+        tasks.value = tasks.value.filter((t) => t.id !== task.id);
       } catch (error) {
         console.error("Error deleting task:", error);
       }
