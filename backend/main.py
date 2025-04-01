@@ -5,7 +5,7 @@ from sqlalchemy.future import select # type: ignore
 from sqlalchemy.exc import NoResultFound # type: ignore
 from pydantic import BaseModel # type: ignore
 from typing import List, Optional
-from models import Task
+from models import Task, Base
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 
 DATABASE_URL = "postgresql+asyncpg://postgres:wWD;\kxe;uYgo7{@localhost:5432/taskdb"
@@ -13,8 +13,6 @@ DATABASE_URL = "postgresql+asyncpg://postgres:wWD;\kxe;uYgo7{@localhost:5432/tas
 # Create a database engine
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
-
-Base = declarative_base()
 
 app = FastAPI()
 
