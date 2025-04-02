@@ -52,7 +52,7 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
+async def run_migrations_online():
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
@@ -60,26 +60,15 @@ def run_migrations_online() -> None:
 
     """
     connectable = create_async_engine(
-    config.get_main_option("sqlalchemy.url"),
-    poolclass=pool.NullPool,
+        config.get_main_option("sqlalchemy.url"),
+        poolclass=pool.NullPool,
     )
 
-    async def run_migrations_online():
-        """Run migrations in 'online' mode using async connection."""
-        async with connectable.connect() as connection:
-            await connection.run_sync(do_run_migrations)
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
 
     def do_run_migrations(connection):
         context.configure(connection=connection, target_metadata=target_metadata)
-        with context.begin_transaction():
-            context.run_migrations()
-
-
-    with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
-
         with context.begin_transaction():
             context.run_migrations()
 
