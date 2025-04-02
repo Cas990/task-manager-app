@@ -60,7 +60,7 @@ async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db)):
     # return task
 
 # Get all tasks
-@app.get("/tasks/", response_model = List[TaskCreate])
+@app.get("/tasks/", response_model = List[TaskResponse])
 async def get_tasks(db: AsyncSession = Depends(get_db)):
     return await Task.get_all(db)
 
