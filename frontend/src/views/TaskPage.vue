@@ -11,14 +11,23 @@
 <script>
   import TaskManager from '../components/TaskManager.vue';
   export default {
+    components: {
+      TaskManager
+    },
     data() {
       return {
-        user: localStorage.getItem('user'),
+        username: '', // Initialize username
       };
+    },
+    created() {
+      // Fetch the logged-in username from localStorage
+      this.username = localStorage.getItem('user') || '';
     },
     methods: {
         logout() {
             localStorage.removeItem('user');
+            this.username = null;
+            this.password = null;
             this.$router.push('/');
         },
     },
