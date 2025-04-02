@@ -1,8 +1,8 @@
 from logging.config import fileConfig
 
-from sqlalchemy.ext.asyncio import AsyncEngine
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import AsyncEngine # type: ignore
+from sqlalchemy.ext.asyncio import create_async_engine # type: ignore
+from sqlalchemy import pool # type: ignore
 from models import Base
 
 
