@@ -13,12 +13,8 @@
   export default {
     data() {
       return {
-        username: '',
+        user: localStorage.getItem('user'),
       };
-    },
-    created() {
-      // Get the logged-in user's username from localStorage
-      this.username = localStorage.getItem('user');
     },
     methods: {
         logout() {
