@@ -24,6 +24,7 @@ a:hover {
 
 body {
   background-color: lightblue;
+  background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(252, 240, 239, 0.925) 0%, rgb(51, 197, 58) 90%);
   margin: 0;
   display: flex;
   place-items: center;
@@ -66,12 +67,12 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  border: 2px solid transparent;
+  padding: 0.2em 0.5em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #c5d6d2;
   cursor: pointer;
   transition: border-color 0.25s;
 }
