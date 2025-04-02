@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue';  // Import TaskManager component
+import {defineComponent} from 'vue'; 
 
 export default defineComponent({
   name: 'App',
