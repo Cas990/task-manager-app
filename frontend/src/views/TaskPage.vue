@@ -1,15 +1,15 @@
 <template>
     <div class="task-page">
         <h1>Welcome, {{ username }}!</h1>
-        <p>Here are your tasks:</p>
-        <!-- Display user tasks here -->
-
         <!-- Logout button -->
         <button @click="logout">Logout</button>
+        <!-- Display user tasks here -->
+        <TaskManager /> 
     </div>
 </template>
   
 <script>
+  import TaskManager from '../components/TaskManager.vue';
   export default {
     data() {
       return {

@@ -1,17 +1,15 @@
 <template>
   <div id="app">
-    <TaskManager />  <!-- Use the TaskManager component -->
+    <router-view />  <!-- This will display either LoginPage or TaskPage based on the route -->
   </div>
 </template>
 
 <script>
-import TaskManager from './components/TaskManager.vue';  // Import TaskManager component
+import {defineComponent} from 'vue';  // Import TaskManager component
 
-export default {
-  components: {
-    TaskManager
-  }
-};
+export default defineComponent({
+  name: 'App',
+});
 </script>
 
 <style>
