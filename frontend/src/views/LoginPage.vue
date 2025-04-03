@@ -27,9 +27,9 @@
       async login() {
         // Perform login logic here
         try {
-          const response = await axios.post("http://127.0.0.1:8000/token/", new URLSearchParams({
+          const response = await axios.post("http://127.0.0.1:8000/token", new URLSearchParams({
               username: this.username,
-              password: this.password,
+              password: this.password
             }),
             {headers: { "Content-Type": "application/x-www-form-urlencoded"} }
           );
