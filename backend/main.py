@@ -141,7 +141,8 @@ async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), curr
 @app.get("/tasks/", response_model = List[TaskResponse])
 async def get_tasks(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = await db.execute(select(Task).where(Task.user_id == current_user.id))
-    return await result.scalars().all()
+    tasks = result.scalars().all()
+    return tasks
 
 # Get a specific task by ID
 @app.get("/tasks/{task_id}", response_model = TaskResponse)
