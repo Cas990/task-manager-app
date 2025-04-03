@@ -22,19 +22,24 @@
       };
     },
     methods: {
-      login() {
-        // Call API to validate user credentials (this is a simple example)
-        // You should replace it with a real API call.
-        if (this.username === 'test' && this.password === 'password') {
-          // Set user in localStorage for session persistence
-          localStorage.setItem('user', this.username);
-          // Redirect to the task page
-          this.$router.push('/tasks');
-        } else {
-          alert('Invalid username or password');
+      async login() {
+        // Perform login logic here
+        try {
+          const response = await axios.post("http://127.0.0.1:8000/token/", new URLSearchParams({
+              username: this.username,
+              password: this.password,
+            }),
+            {headers: { "Content-Type": "application/x-www-form-urlencoded"} }
+          );
+
+          localStorage.setItem("token", response.data.access_token);
+          this.$router.push("/tasks");          
+        } catch (error) {
+          console.error("Error logging in:", error);
+          alert("Invalid credentials");
         }
-      },
-    },
+      },   
+    },     
   };
   </script>
   
