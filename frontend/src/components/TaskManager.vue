@@ -1,31 +1,20 @@
 <template>
-  <div>
-    <h1>Task Manager</h1>
-
-    <!-- Task List -->
-    <div v-for="task in tasks" :key="task.id" class="task-card">
-      <div class="task-content">
-        <!-- Checkbox for completion status -->
-        <input type="checkbox" :checked="task.completed" @change="toggleTask(task)" />
-        <span :class="{ done: task.completed }" @click="toggleTask(task)">
-          {{ task.title }}
-        </span>
-        <!-- Delete button -->
+  <div class="task-manager">
+    <h2>Manage Your Tasks</h2>
+    <input v-model="newTask" placeholder="New task" />
+    <button @click="addTask">Add Task</button>
+    <ul>
+      <li
+        v-for="task in tasks"
+        :key="task.id"
+        :class="{'completed': task.completed}"
+        @click="toggleTask(task)"
+      >
+        <span class="task-title">{{ task.title }}</span>
+        <span v-if="task.completed" class="checkmark">✔</span>
         <button @click="deleteTask(task)" class="delete-button">Delete</button>
-      </div>
-    </div>
-
-    <!-- Floating Add Task Button -->
-    <button @click="openAddTaskModal" class="add-task-button">+</button>
-
-    <!-- Add Task Modal -->
-    <div v-if="showAddTaskModal" class="modal">
-      <div class="modal-content">
-        <input v-model="newTask" type="text" placeholder="Enter new task" />
-        <button @click="addTask">Add Task</button>
-        <button @click="closeAddTaskModal">Cancel</button>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -37,7 +26,6 @@ export default {
   setup() {
     const tasks = ref([]);
     const newTask = ref("");
-    const showAddTaskModal = ref(false); // To toggle the modal visibility
 
     // Fetch tasks from FastAPI (now with authentication)
     const fetchTasks = async () => {
@@ -49,8 +37,7 @@ export default {
       }
 
       try {
-        const response = await axios.get("http://127.0.0.1:8000/tasks/",
-        {
+        const response = await axios.get("http://127.0.0.1:8000/tasks/", {
           headers: { Authorization: `Bearer ${token}` }, // Pass token
         });
         tasks.value = response.data;
@@ -67,12 +54,14 @@ export default {
       if (!token) return;
 
       try {
-        const response = await axios.post("http://127.0.0.1:8000/tasks/", {
-          title: newTask.value,
-          completed: false,
-        },
-        { headers: { Authorization: `Bearer ${token}` } } // Pass token
-      );
+        const response = await axios.post(
+          "http://127.0.0.1:8000/tasks/",
+          {
+            title: newTask.value,
+            completed: false,
+          },
+          { headers: { Authorization: `Bearer ${token}` } } // Pass token
+        );
         tasks.value.push(response.data);
         console.log("Added task:", response.data);
         newTask.value = "";
@@ -83,14 +72,17 @@ export default {
 
     // Toggle task completion
     const toggleTask = async (task) => {
+      console.log("Toggling task with ID:", task.id);
       task.completed = !task.completed;
 
       const token = localStorage.getItem("token");
       if (!token) return;
 
       try {
-        await axios.put(`http://127.0.0.1:8000/tasks/${task.id}`, task,
-        { headers: { Authorization: `Bearer ${token}` } } // Pass token
+        await axios.put(
+          `http://127.0.0.1:8000/tasks/${task.id}`,
+          task,
+          { headers: { Authorization: `Bearer ${token}` } } // Pass token
         );
       } catch (error) {
         console.error("Error updating task:", error);
@@ -99,6 +91,7 @@ export default {
 
     // Delete a task
     const deleteTask = async (task) => {
+      console.log("Deleting task with ID:", task.id);
       if (!task.id) {
         console.error("Invalid task ID");
         return;
@@ -107,122 +100,42 @@ export default {
       if (!token) return;
 
       try {
-        await axios.delete(`http://127.0.0.1:8000/tasks/${task.id}`,
-          { headers: { Authorization: `Bearer ${token}` } } // Pass token
-        );
+        await axios.delete(`http://127.0.0.1:8000/tasks/${task.id}`, {
+          headers: { Authorization: `Bearer ${token}` }, // Pass token
+        });
         tasks.value = tasks.value.filter((t) => t.id !== task.id);
       } catch (error) {
         console.error("Error deleting task:", error);
       }
     };
 
-    // Modal functions
-    const openAddTaskModal = () => {
-      showAddTaskModal.value = true;
-    };
-
-    const closeAddTaskModal = () => {
-      showAddTaskModal.value = false;
-      newTask.value = "";
-    };
-
     onMounted(fetchTasks);
 
-    return { tasks, newTask, addTask, toggleTask, deleteTask, showAddTaskModal,
-      openAddTaskModal,
-      closeAddTaskModal, };
+    return { tasks, newTask, addTask, toggleTask, deleteTask };
   },
 };
 </script>
 
 <style scoped>
-/* Task Card Styling */
-.task-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
+.task-manager {
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-}
-
-.task-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.done {
-  text-decoration: line-through;
-  color: #888;
-  cursor: pointer;
-}
-
-/* Checkbox styling */
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-/* Delete Button Styling */
-button {
-  padding: 5px 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #d32f2f;
-}
-
-/* Floating Add Task Button */
-.add-task-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  z-index: 100;
-}
-
-.add-task-button:hover {
-  background-color: #45a049;
-}
-
-/* Modal Styling */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
   padding: 20px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+h2 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 input {
   padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -234,24 +147,56 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 600px) {
-  .task-card {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-  }
+button:hover {
+  background-color: #45a049;
+}
 
-  .task-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+ul {
+  list-style: none;
+  padding: 0;
+}
 
-  .task-card button {
-    margin-top: 10px;
-    width: 100%;
-  }
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+li.completed {
+  background-color: #4caf50; /* Green background for completed task */
+  color: white;
+}
+
+li .task-title {
+  flex: 1;
+}
+
+li .checkmark {
+  color: #fff;
+  font-size: 1.5em;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+li button.delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+li button.delete-button:hover {
+  background-color: #d32f2f;
 }
 </style>

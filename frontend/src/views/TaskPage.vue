@@ -7,44 +7,47 @@
     <TaskManager />
   </div>
 </template>
-  
-<script>
-  import TaskManager from '../components/TaskManager.vue';
-  export default {
-    components: {
-      TaskManager
-    },
-    data() {
-      return {
-        username: '', // Initialize username
-      };
-    },
-    created() {
-      // Fetch the logged-in username from localStorage
-      this.username = localStorage.getItem('user') || '';
-    },
-    methods: {
-        /**
-         * Logs out the user by removing the username from localStorage and redirecting to the login page.
-         */
-        logout() {
-            localStorage.removeItem('user');
-            this.username = null;
-            this.password = null;
-            this.$router.push('/');
-        },
-    },
 
-  };
+<script>
+import TaskManager from "../components/TaskManager.vue";
+export default {
+  components: {
+    TaskManager,
+  },
+  data() {
+    return {
+      username: "", // Initialize username
+    };
+  },
+/*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Lifecycle hook: fetch the logged-in username from localStorage when the component is created.
+     * @function created
+     */
+/******  a26dcaf0-11eb-4447-8073-0b059ae96c78  *******/  created() {
+    // Fetch the logged-in username from localStorage
+    this.username = localStorage.getItem("user") || "";
+  },
+  methods: {
+    /**
+     * Logs out the user by removing the username from localStorage and redirecting to the login page.
+     */
+    logout() {
+      localStorage.removeItem("user");
+      this.username = null;
+      this.$router.push("/");
+    },
+  },
+};
 </script>
-  
+
 <style scoped>
 .task-page {
   padding: 30px;
   text-align: center;
   max-width: 1000px;
   margin: 0 auto;
-  background-color: #f5f5f5;
+  background-color: #fff; /* Set a white background for the task page */
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -91,4 +94,3 @@ h1 {
   }
 }
 </style>
-  
