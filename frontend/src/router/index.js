@@ -14,8 +14,8 @@ const router = createRouter({
 
 // Navigation guard to protect routes that require authentication
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('user')) {
-    next('/');
+  if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+    next('/'); // Redirects back to login if no token is found
   } else {
     next();
   }
