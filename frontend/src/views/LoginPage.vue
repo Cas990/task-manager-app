@@ -35,6 +35,7 @@
           );
 
           localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("user", this.username);
           this.$router.push("/tasks");          
         } catch (error) {
           console.error("Error logging in:", error);

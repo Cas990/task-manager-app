@@ -24,6 +24,9 @@
       this.username = localStorage.getItem('user') || '';
     },
     methods: {
+        /**
+         * Logs out the user by removing the username from localStorage and redirecting to the login page.
+         */
         logout() {
             localStorage.removeItem('user');
             this.username = null;
