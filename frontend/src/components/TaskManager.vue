@@ -1,16 +1,31 @@
 <template>
   <div>
     <h1>Task Manager</h1>
-    <input v-model="newTask" placeholder="New task" />
-    <button @click="addTask">Add Task</button>
-    <ul>
-      <li v-for="task in tasks" :key="task.id">
+
+    <!-- Task List -->
+    <div v-for="task in tasks" :key="task.id" class="task-card">
+      <div class="task-content">
+        <!-- Checkbox for completion status -->
+        <input type="checkbox" :checked="task.completed" @change="toggleTask(task)" />
         <span :class="{ done: task.completed }" @click="toggleTask(task)">
           {{ task.title }}
         </span>
-        <button @click="deleteTask(task)">Delete</button>
-      </li>
-    </ul>
+        <!-- Delete button -->
+        <button @click="deleteTask(task)" class="delete-button">Delete</button>
+      </div>
+    </div>
+
+    <!-- Floating Add Task Button -->
+    <button @click="openAddTaskModal" class="add-task-button">+</button>
+
+    <!-- Add Task Modal -->
+    <div v-if="showAddTaskModal" class="modal">
+      <div class="modal-content">
+        <input v-model="newTask" type="text" placeholder="Enter new task" />
+        <button @click="addTask">Add Task</button>
+        <button @click="closeAddTaskModal">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,6 +37,7 @@ export default {
   setup() {
     const tasks = ref([]);
     const newTask = ref("");
+    const showAddTaskModal = ref(false); // To toggle the modal visibility
 
     // Fetch tasks from FastAPI (now with authentication)
     const fetchTasks = async () => {
@@ -67,7 +83,6 @@ export default {
 
     // Toggle task completion
     const toggleTask = async (task) => {
-      console.log("Toggling task with ID:", task.id);	
       task.completed = !task.completed;
 
       const token = localStorage.getItem("token");
@@ -84,7 +99,6 @@ export default {
 
     // Delete a task
     const deleteTask = async (task) => {
-      console.log("Deleting task with ID:", task.id);
       if (!task.id) {
         console.error("Invalid task ID");
         return;
@@ -102,17 +116,142 @@ export default {
       }
     };
 
+    // Modal functions
+    const openAddTaskModal = () => {
+      showAddTaskModal.value = true;
+    };
+
+    const closeAddTaskModal = () => {
+      showAddTaskModal.value = false;
+      newTask.value = "";
+    };
+
     onMounted(fetchTasks);
 
-    return { tasks, newTask, addTask, toggleTask, deleteTask };
+    return { tasks, newTask, addTask, toggleTask, deleteTask, showAddTaskModal,
+      openAddTaskModal,
+      closeAddTaskModal, };
   },
 };
 </script>
 
 <style scoped>
-/* Add your styles here */
+/* Task Card Styling */
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .done {
   text-decoration: line-through;
+  color: #888;
   cursor: pointer;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Delete Button Styling */
+button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d32f2f;
+}
+
+/* Floating Add Task Button */
+.add-task-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.add-task-button:hover {
+  background-color: #45a049;
+}
+
+/* Modal Styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .task-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .task-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-card button {
+    margin-top: 10px;
+    width: 100%;
+  }
 }
 </style>
