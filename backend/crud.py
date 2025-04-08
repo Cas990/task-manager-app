@@ -3,20 +3,17 @@ from sqlalchemy.future import select # type: ignore
 from models import User, Task
 from passlib.context import CryptContext # type: ignore
 from schemas import UserCreate, UserResponse, TaskCreate, TaskResponse # type: ignore
-from fastapi import Depends, HTTPException, status # type: ignore
-from auth import get_current_user
+from fastapi import Depends, HTTPException, APIRouter # type: ignore
+from auth import get_current_user, get_user_by_username
+from security import pwd_context
 from db import get_db
-from main import app
 from typing import List
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+router = APIRouter()
 
 # USERNAME FUNCTIONS
-async def get_user_by_username(db: AsyncSession, username: str):
-    result = await db.execute(select(User).where(User.username == username))
-    return result.scalar()
 
-@app.post("/register/", response_model = UserResponse)
+@router.post("/register/", response_model = UserResponse)
 async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_username(db, user_data.username)
     if existing_user:
@@ -32,7 +29,7 @@ async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db
 
 # TASK FUNCTIONS
 # Create a task
-@app.post("/tasks/", response_model = TaskResponse)
+@router.post("/tasks/", response_model = TaskResponse)
 
 async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_task = Task(title=task.title, description=task.description, completed=task.completed, user_id=current_user.id)
@@ -45,14 +42,14 @@ async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), curr
     # return task
 
 # Get all tasks
-@app.get("/tasks/", response_model = List[TaskResponse])
+@router.get("/tasks/", response_model = List[TaskResponse])
 async def get_tasks(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = await db.execute(select(Task).where(Task.user_id == current_user.id))
     tasks = result.scalars().all()
     return tasks
 
 # Get a specific task by ID
-@app.get("/tasks/{task_id}", response_model = TaskResponse)
+@router.get("/tasks/{task_id}", response_model = TaskResponse)
 async def get_task(task_id: int, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = await db.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))
     task = result.scalar()
@@ -63,7 +60,7 @@ async def get_task(task_id: int, db: AsyncSession = Depends(get_db), current_use
     return task
 
 # Update a task
-@app.put("/tasks/{task_id}", response_model = TaskResponse)
+@router.put("/tasks/{task_id}", response_model = TaskResponse)
 async def update_task(task_id: int, task_update: TaskCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = await db.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))
     task = result.scalar()
@@ -82,7 +79,7 @@ async def update_task(task_id: int, task_update: TaskCreate, db: AsyncSession = 
     return task
 
 # Delete a task
-@app.delete("/tasks/{task_id}")
+@router.delete("/tasks/{task_id}")
 async def delete_task(task_id: int, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     result = await db.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))
     task = result.scalar()

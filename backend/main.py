@@ -1,5 +1,7 @@
 from fastapi import FastAPI # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
+from auth import router as auth_router
+from crud import router as crud_router
 
 
 app = FastAPI()
@@ -12,5 +14,5 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-tasks = []
+app.include_router(auth_router)  # Prefix is important!
 
