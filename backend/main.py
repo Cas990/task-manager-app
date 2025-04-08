@@ -14,5 +14,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-app.include_router(auth_router)  # Prefix is important!
+app.include_router(auth_router)
+app.include_router(crud_router)
 
