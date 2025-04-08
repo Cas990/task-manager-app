@@ -10,7 +10,7 @@
   
         <button type="submit">Login</button>
       </form>
-      <p>Don't have an account? <button @click="register">Register</button></p>
+      <p>Don't have an account? <router-link to="register">Register here</router-link></p>
     </div>
 </template>
   
@@ -43,18 +43,7 @@
           alert("Invalid credentials");
         }
       },  
-      async register() {
-        try {
-          const response = await axios.post("http://127.0.0.1:8000/register/", {
-            username: this.username,
-            password: this.password
-          });
-          alert("Registration successful! Please log in.");
-        } catch (error) {
-          console.error("Error registering:", error);
-          alert("Registration failed. Try a different username.");
-        }
-      } 
+      
     },     
   };
 </script>

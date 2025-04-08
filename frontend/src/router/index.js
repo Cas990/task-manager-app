@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import TaskPage from '../views/TaskPage.vue';
+import Register from '../views/Register.vue';
 
 const routes = [
-  { path: '/', component: LoginPage },
+  { path: '/', redirect: '/login' },
+  { path: '/login', component: LoginPage },
   { path: '/tasks', component: TaskPage, meta: { requiresAuth: true } },
+  { path: '/register', component: Register },
 ];
 
 const router = createRouter({
