@@ -10,10 +10,11 @@
   
         <button type="submit">Login</button>
       </form>
+      <p>Don't have an account? <button @click="register">Register</button></p>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
   import axios from "axios"; 
 
   export default {
@@ -33,7 +34,7 @@
             }),
             {headers: { "Content-Type": "application/x-www-form-urlencoded"} }
           );
-
+          /* add token and username to local storage */
           localStorage.setItem("token", response.data.access_token);
           localStorage.setItem("user", this.username);
           this.$router.push("/tasks");          
@@ -41,45 +42,56 @@
           console.error("Error logging in:", error);
           alert("Invalid credentials");
         }
-      },   
+      },  
+      async register() {
+        try {
+          const response = await axios.post("http://127.0.0.1:8000/register/", {
+            username: this.username,
+            password: this.password
+          });
+          alert("Registration successful! Please log in.");
+        } catch (error) {
+          console.error("Error registering:", error);
+          alert("Registration failed. Try a different username.");
+        }
+      } 
     },     
   };
-  </script>
+</script>
   
-  <style scoped>
-  /* Add some basic styling for the login form */
-  .login {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
-  
-  label {
-    margin-bottom: 5px;
-  }
-  
-  input {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  </style>
+<style scoped>
+.login {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+</style>
   

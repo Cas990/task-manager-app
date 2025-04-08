@@ -12,15 +12,19 @@ from typing import List
 router = APIRouter()
 
 # USERNAME FUNCTIONS
-
+# Register a user
 @router.post("/register/", response_model = UserResponse)
 async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
+    # Ensure the username is not already taken
     existing_user = await get_user_by_username(db, user_data.username)
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
     
+    # Hash the password
     hashed_password = pwd_context.hash(user_data.password)
+    # Create new user based on username and hashed password
     new_user = User(username=user_data.username, hashed_password=hashed_password)
+    # Add it to the database
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
@@ -30,16 +34,12 @@ async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db
 # TASK FUNCTIONS
 # Create a task
 @router.post("/tasks/", response_model = TaskResponse)
-
 async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_task = Task(title=task.title, description=task.description, completed=task.completed, user_id=current_user.id)
     db.add(db_task)
     await db.commit()
     await db.refresh(db_task)
     return db_task
-    # task.id = len(tasks) + 1  # Auto-generate ID based on list length
-    # tasks.append(task)
-    # return task
 
 # Get all tasks
 @router.get("/tasks/", response_model = List[TaskResponse])
@@ -74,7 +74,7 @@ async def update_task(task_id: int, task_update: TaskCreate, db: AsyncSession = 
     task.completed = task_update.completed
 
     await db.commit()
-    await db.refresh(task) # Refresh object with new data from DB
+    await db.refresh(task)
 
     return task
 
