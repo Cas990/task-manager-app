@@ -21,23 +21,12 @@ ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+# Retrieve a user from the db by username
 async def get_user_by_username(db: AsyncSession, username: str):
     result = await db.execute(select(User).where(User.username == username))
     return result.scalar()
 
-def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None):
-    to_encode = data.copy()
-    expire = datetime.datetime.utcnow() + (expires_delta or datetime.timedelta(hours=1))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-async def authenticate_user(db: AsyncSession, username: str, password: str):
-    user = await get_user_by_username(db, username)
-    if not user or not pwd_context.verify(password, user.hashed_password):
-        return None
-    return user
-
-
+# Uses JWT token to get the currently authenticated user
 async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -50,7 +39,22 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
         return user
     except jwt.PyJWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    
+
+# Verify username and password to authenticate the user
+async def authenticate_user(db: AsyncSession, username: str, password: str):
+    user = await get_user_by_username(db, username)
+    if not user or not pwd_context.verify(password, user.hashed_password):
+        return None
+    return user
+
+# Create JWT token
+def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None):
+    to_encode = data.copy()
+    expire = datetime.datetime.utcnow() + (expires_delta or datetime.timedelta(hours=1))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+# Endpoint for user authentication and token generation  
 @router.post("/token", response_model = TokenResponse)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     user = await authenticate_user(db, form_data.username, form_data.password)

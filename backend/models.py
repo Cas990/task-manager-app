@@ -25,6 +25,7 @@ class Task(Base):
 
     user = relationship("User", back_populates="tasks")
 
+    # Retrieve all tasks from the database
     @classmethod
     async def get_all(cls, db: AsyncSession):
         result = await db.execute(select(cls))

@@ -24,7 +24,7 @@ app.add_middleware(
     allow_origins=origins,  # Allows frontend origin
     allow_credentials=True,
     allow_methods=methods,  # Allows necessary HTTP methods
-    allow_headers=headers,  # Allows all headers
+    allow_headers=headers,  # Allows necessary headers
 )
 
 app.include_router(auth_router)

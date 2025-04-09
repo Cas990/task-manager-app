@@ -1,5 +1,5 @@
 from pydantic import BaseModel # type: ignore
-from typing import Optional, List
+from typing import Optional
 
 class UserCreate(BaseModel):
     username: str
@@ -16,7 +16,6 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str
 
-# Task model
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
