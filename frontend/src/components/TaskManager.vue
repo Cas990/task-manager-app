@@ -63,7 +63,6 @@ export default {
           { headers: { Authorization: `Bearer ${token}` } } // Pass token
         );
         tasks.value.push(response.data);
-        console.log("Added task:", response.data);
         newTask.value = "";
       } catch (error) {
         console.error("Error adding task:", error);
@@ -72,7 +71,6 @@ export default {
 
     // Toggle task completion
     const toggleTask = async (task) => {
-      console.log("Toggling task with ID:", task.id);
       task.completed = !task.completed;
 
       const token = localStorage.getItem("token");
@@ -91,7 +89,6 @@ export default {
 
     // Delete a task
     const deleteTask = async (task) => {
-      console.log("Deleting task with ID:", task.id);
       if (!task.id) {
         console.error("Invalid task ID");
         return;
