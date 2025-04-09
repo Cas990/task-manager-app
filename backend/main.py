@@ -6,9 +6,13 @@ from crud import router as crud_router
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (you can restrict this to specific domains)
+    allow_origins=origins,  # Allows all origins (you can restrict this to specific domains)
     allow_credentials=True,
     allow_methods=["*"],  # Allows all HTTP methods
     allow_headers=["*"],  # Allows all headers
