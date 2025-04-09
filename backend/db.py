@@ -1,8 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine # type: ignore
 from sqlalchemy.orm import sessionmaker # type: ignore
 from models import Base
+import os
+from dotenv import load_dotenv # type: ignore
 
-DATABASE_URL = "postgresql+asyncpg://postgres:wWD;\kxe;uYgo7{@localhost:5432/taskdb"
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Create a database engine
 engine = create_async_engine(DATABASE_URL, echo=True)

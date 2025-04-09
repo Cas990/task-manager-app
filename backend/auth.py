@@ -9,11 +9,14 @@ from models import User
 from typing import Optional
 from schemas import TokenResponse
 from sqlalchemy.future import select # type: ignore
+from dotenv import load_dotenv # type: ignore
+import os
 
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 router = APIRouter()
 
-SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
