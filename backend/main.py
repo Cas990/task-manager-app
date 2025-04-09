@@ -10,12 +10,21 @@ origins = [
     "http://localhost:5173",
 ]
 
+methods = [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE"
+]
+
+headers = ["Content-Type", "Authorization"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows all origins (you can restrict this to specific domains)
+    allow_origins=origins,  # Allows frontend origin
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=methods,  # Allows necessary HTTP methods
+    allow_headers=headers,  # Allows all headers
 )
 
 app.include_router(auth_router)
