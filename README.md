@@ -72,8 +72,8 @@ Accessible in the browser at http://localhost:5173
 ### Environment Variables
 Create a `.env` file in the backend directory and add the following environment variables (replace with your own credentials):
 
-DATABASE_URL=postgresql://user:password@localhost:5432/database_name
-SECRET_KEY=your_secret_key
+- DATABASE_URL=postgresql://user:password@localhost:5432/database_name 
+- SECRET_KEY=your_secret_key
 
 ### Notes
 - Make sure to initialize the database before running the app by running db_init.py using the following command (if starting at root):
