@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />  <!-- This will display either LoginPage or TaskPage based on the route -->
+    <router-view />  <!-- This will display either LoginPage, TaskPage or Register based on the route -->
   </div>
 </template>
 
@@ -13,5 +13,4 @@ export default defineComponent({
 </script>
 
 <style>
-/* Add any global styling here */
 </style>

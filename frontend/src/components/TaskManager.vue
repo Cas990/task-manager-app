@@ -27,12 +27,12 @@ export default {
     const tasks = ref([]);
     const newTask = ref("");
 
-    // Fetch tasks from FastAPI (now with authentication)
+    // Fetch tasks from FastAPI
     const fetchTasks = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Not authenticated! Redirecting to login.");
-        window.location.href = "/"; // Redirect to login
+        window.location.href = "/"; // Redirect to login page
         return;
       }
 
@@ -172,7 +172,7 @@ li {
 }
 
 li.completed {
-  background-color: #4caf50; /* Green background for completed task */
+  background-color: #4caf50; 
   color: white;
 }
 

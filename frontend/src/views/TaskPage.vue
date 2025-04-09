@@ -3,7 +3,7 @@
     <h1>Welcome, <span class="username">{{ username }}</span>!</h1>
     <!-- Logout button -->
     <button @click="logout" class="logout-button">Logout</button>
-    <!-- Display user tasks here -->
+    
     <TaskManager />
   </div>
 </template>
@@ -19,19 +19,11 @@ export default {
       username: "", // Initialize username
     };
   },
-/*************  ✨ Codeium Command ⭐  *************/
-    /**
-     * Lifecycle hook: fetch the logged-in username from localStorage when the component is created.
-     * @function created
-     */
-/******  a26dcaf0-11eb-4447-8073-0b059ae96c78  *******/  created() {
+  created() {
     // Fetch the logged-in username from localStorage
     this.username = localStorage.getItem("user") || "";
   },
   methods: {
-    /**
-     * Logs out the user by removing the username from localStorage and redirecting to the login page.
-     */
     logout() {
       localStorage.removeItem("user");
       this.username = null;
@@ -47,7 +39,7 @@ export default {
   text-align: center;
   max-width: 1000px;
   margin: 0 auto;
-  background-color: #fff; /* Set a white background for the task page */
+  background-color: #fff; 
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -59,7 +51,7 @@ h1 {
 }
 
 .username {
-  color: #4caf50; /* Highlight the username in green */
+  color: #4caf50;
   font-weight: bold;
 }
 
