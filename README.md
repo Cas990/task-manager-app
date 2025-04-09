@@ -18,7 +18,7 @@ To run this app, you need to have the following installed:
 ## Setup instructions
 
 ### Backend Setup
-
+```
 # Navigate to the backend directory 
 cd backend
 
@@ -34,9 +34,10 @@ venv\Scripts\activate
 
 # Install backend dependencies
 pip install -r requirements.txt
-
+```
 
 ### Frontend Setup
+```	
 # Navigate to the frontend directory
 cd frontend
 
@@ -66,6 +67,7 @@ cd frontend
 npm run dev
 
 Accessible in the browser at http://localhost:5173
+```
 
 ### Environment Variables
 Create a `.env` file in the backend directory and add the following environment variables (replace with your own credentials):
@@ -74,6 +76,8 @@ DATABASE_URL=postgresql://user:password@localhost:5432/database_name
 SECRET_KEY=your_secret_key
 
 ### Notes
-- Make sure to initialize the database before running the app by running db_init.py using the following command:
-    python backend/db_init.py
+- Make sure to initialize the database before running the app by running db_init.py using the following command (if starting at root):
+```
+python backend/db_init.py
+```
 - An `alembic` directory is used for database migrations.
